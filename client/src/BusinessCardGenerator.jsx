@@ -72,6 +72,12 @@ class BusinessCardGenerator extends React.Component {
          <div className="card-editor__field">
            <label htmlFor="firstName">First Name</label>
            <input type="text" id="firstName" name="firstName" value={cardFields.firstName} onChange={this.updateCard} />
+           <label htmlFor="lastName">Last Name</label>
+           <input type="text" id="lastName" name="lastName" value={cardFields.firstName} onChange={this.updateCard} />
+           <label htmlFor="title">Title</label>
+           <input type="text" id="title" name="title" value={cardFields.firstName} onChange={this.updateCard} />
+           <label htmlFor="companyName">Title</label>
+           <input type="text" id="companyName" name="companyName" value={cardFields.firstName} onChange={this.updateCard} />
          </div>
          {/* Add other input fields here */}
        </form>
