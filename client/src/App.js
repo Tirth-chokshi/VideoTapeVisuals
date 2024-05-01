@@ -1,6 +1,5 @@
 
 import './App.css';
-// import BusinessCardGenerator from './BusinessCardGenerator';
 import React from "react";
 import svgTemplate from "./svgTemplet";
 import { Canvg } from "canvg";
@@ -17,7 +16,7 @@ class App extends React.Component {
        firstName: "Patrick",
        lastName: "Bateman",
        title: "Vice President",
-       companyName: "Pierce & Pierce",
+       companyName: "Pierce &Pierce",
        companySubtitle: "Mergers and Aquisitions",
        address: "358 Exchange Place New York, N.Y. 10099 fax 212 555 6390 telex 10 4534",
      },
@@ -53,11 +52,11 @@ class App extends React.Component {
  };
 
  updateCard = (ev) => {
-   const { id, value } = ev.target;
+   const { id, placeholder } = ev.target;
    this.setState((prevState) => ({
      cardFields: {
        ...prevState.cardFields,
-       [id]: value,
+       [id]: placeholder,
      },
    }), this.syncCardElement);
  };
@@ -74,9 +73,33 @@ class App extends React.Component {
        <form className="card-editor">
          <div className="card-editor__field">
            <label htmlFor="firstName">First Name</label>
-           <input type="text" id="firstName" name="firstName" value={cardFields.firstName} onChange={this.updateCard} />
+           <input type="text" id="firstName" name="firstName" placeholder={cardFields.firstName} onChange={this.updateCard} />
          </div>
          {/* Add other input fields here */}
+         <div className="card-editor__field">
+           <label htmlFor="lastName">Last Name</label>
+           <input type="text" id="lastName" name="lastName" placeholder={cardFields.lastName} onChange={this.updateCard} />
+         </div>
+         <div className="card-editor__field">
+           <label htmlFor="phoneNumber">First Name</label>
+           <input type="text" id="phoneNumber" name="phoneNumber" placeholder={cardFields.phoneNumber} onChange={this.updateCard} />
+         </div>
+         <div className="card-editor__field">
+           <label htmlFor="title">First Name</label>
+           <input type="text" id="title" name="title" placeholder={cardFields.title} onChange={this.updateCard} />
+         </div>
+         <div className="card-editor__field">
+           <label htmlFor="companyName">First Name</label>
+           <input type="text" id="companyName" name="companyName" placeholder={cardFields.companyName} onChange={this.updateCard} />
+         </div>
+         <div className="card-editor__field">
+           <label htmlFor="companySubtitle">First Name</label>
+           <input type="text" id="companySubtitle" name="companySubtitle" placeholder={cardFields.companySubtitle} onChange={this.updateCard} />
+         </div>
+         <div className="card-editor__field">
+           <label htmlFor="address">First Name</label>
+           <input type="text" id="address" name="address" placeholder={cardFields.address} onChange={this.updateCard} />
+         </div>
        </form>
        <fieldset className="card-save">
          <legend>Export</legend>
