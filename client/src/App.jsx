@@ -51,11 +51,11 @@ class App extends React.Component {
  };
 
  updateCard = (ev) => {
-   const { id, placeholder } = ev.target;
+   const { id, value } = ev.target;
    this.setState((prevState) => ({
      cardFields: {
        ...prevState.cardFields,
-       [id]: placeholder,
+       [id]: value,
      },
    }), this.syncCardElement);
  };
@@ -64,7 +64,7 @@ class App extends React.Component {
    const { cardFields } = this.state;
 
    return (
-     <div>
+     <div className='main'>
        <h1>Business Card Generator</h1>
        <div className="card" id="card-container">
          <img id="card-image" src={`data:image/svg+xml;charset=utf-8,${this.state.svg}`} alt="Business Card" />
