@@ -80,7 +80,7 @@ class App extends React.Component {
            <input type="text" id="lastName" name="lastName" placeholder={cardFields.lastName} onChange={this.updateCard} />
          </div>
          <div className="card-editor__field">
-           <label htmlFor="phoneNumber">First Name</label>
+           <label htmlFor="phoneNumber">phone no</label>
            <input type="text" id="phoneNumber" name="phoneNumber" placeholder={cardFields.phoneNumber} onChange={this.updateCard} />
          </div>
          <div className="card-editor__field">
