@@ -1,116 +1,111 @@
-import './App.css';
-import React from "react";
+import React, { useState, useEffect } from 'react';
+import { Card, CardContent, TextField, Button, Typography, Box, Container, Grid } from '@mui/material';
 import svgTemplate from "./svgTemplet";
 import { Canvg } from "canvg";
 
 const SVG_WIDTH = 334;
 const SVG_HEIGHT = 192;
 
-class App extends React.Component {
- constructor(props) {
-   super(props);
-   this.state = {
-     cardFields: {
-       phoneNumber: "212 555 6342",
-       firstName: "Patrick",
-       lastName: "Bateman",
-       title: "Vice President",
-       companyName: "Pierce &Pierce",
-       companySubtitle: "Mergers and Aquisitions",
-       address: "358 Exchange Place New York, N.Y. 10099 fax 212 555 6390 telex 10 4534",
-     },
-     svg: "",
-   };
- }
+const App = () => {
+  const [cardFields, setCardFields] = useState({
+    phoneNumber: "212 555 6342",
+    firstName: "Patrick",
+    lastName: "Bateman",
+    title: "Vice President",
+    companyName: "Pierce & Pierce",
+    companySubtitle: "Mergers and Acquisitions",
+    address: "358 Exchange Place New York, N.Y. 10099 fax 212 555 6390 telex 10 4534",
+  });
+  const [svg, setSvg] = useState("");
 
- componentDidMount() {
-   this.syncCardElement();
- }
+  useEffect(() => {
+    syncCardElement();
+  }, [cardFields]);
 
- pngDownloadLinkHandler = () => {
-   const canvas = document.createElement("canvas");
-   const ctx = canvas.getContext("2d");
-   const scale = 3;
-   const v = Canvg.fromString(ctx, this.state.svg);
-   v.resize(SVG_WIDTH * scale, SVG_HEIGHT * scale);
-   v.start();
-   const pngLinkEl = document.getElementById("png-download");
-   pngLinkEl.href = canvas.toDataURL("image/png");
- };
+  const syncCardElement = () => {
+    const newSvg = svgTemplate(cardFields);
+    setSvg(newSvg);
+  };
 
- svgDownloadLinkHandler = () => {
-   const blob = new Blob([this.state.svg], { type: "image/svg+xml" });
-   const svgLinkEl = document.getElementById("svg-download");
-   svgLinkEl.href = URL.createObjectURL(blob);
- };
+  const updateCard = (event) => {
+    const { id, value } = event.target;
+    setCardFields(prevFields => ({
+      ...prevFields,
+      [id]: value,
+    }));
+  };
 
- syncCardElement = () => {
-   const { cardFields } = this.state;
-   const svg = svgTemplate(cardFields);
-   this.setState({ svg });
- };
+  const handleDownload = (format) => {
+    if (format === 'svg') {
+      const blob = new Blob([svg], { type: "image/svg+xml" });
+      const url = URL.createObjectURL(blob);
+      downloadFile(url, 'business-card.svg');
+    } else if (format === 'png') {
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+      const scale = 3;
+      const v = Canvg.fromString(ctx, svg);
+      v.resize(SVG_WIDTH * scale, SVG_HEIGHT * scale);
+      v.start();
+      const url = canvas.toDataURL("image/png");
+      downloadFile(url, 'business-card.png');
+    }
+  };
 
- updateCard = (ev) => {
-   const { id, value } = ev.target;
-   this.setState((prevState) => ({
-     cardFields: {
-       ...prevState.cardFields,
-       [id]: value,
-     },
-   }), this.syncCardElement);
- };
+  const downloadFile = (url, filename) => {
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
- render() {
-   const { cardFields } = this.state;
-
-   return (
-     <div className='main'>
-       <h1>Business Card Generator</h1>
-       <div className="card" id="card-container">
-         <img id="card-image" src={`data:image/svg+xml;charset=utf-8,${this.state.svg}`} alt="Business Card" />
-       </div>
-       <form className="card-editor">
-         <div className="card-editor__field">
-           <label htmlFor="firstName">First Name</label>
-           <input type="text" id="firstName" name="firstName" placeholder={cardFields.firstName} onChange={this.updateCard} />
-         </div>
-         {/* Add other input fields here */}
-         <div className="card-editor__field">
-           <label htmlFor="lastName">Last Name</label>
-           <input type="text" id="lastName" name="lastName" placeholder={cardFields.lastName} onChange={this.updateCard} />
-         </div>
-         <div className="card-editor__field">
-           <label htmlFor="phoneNumber">phone no</label>
-           <input type="text" id="phoneNumber" name="phoneNumber" placeholder={cardFields.phoneNumber} onChange={this.updateCard} />
-         </div>
-         <div className="card-editor__field">
-           <label htmlFor="title">Title</label>
-           <input type="text" id="title" name="title" placeholder={cardFields.title} onChange={this.updateCard} />
-         </div>
-         <div className="card-editor__field">
-           <label htmlFor="companyName">Company Name</label>
-           <input type="text" id="companyName" name="companyName" placeholder={cardFields.companyName} onChange={this.updateCard} />
-         </div>
-         <div className="card-editor__field">
-           <label htmlFor="companySubtitle">Company Subtitle</label>
-           <input type="text" id="companySubtitle" name="companySubtitle" placeholder={cardFields.companySubtitle} onChange={this.updateCard} />
-         </div>
-         <div className="card-editor__field">
-           <label htmlFor="address">First Name</label>
-           <input type="text" id="address" name="address" placeholder={cardFields.address} onChange={this.updateCard} />
-         </div>
-       </form>
-       <fieldset className="card-save">
-         <legend>Export</legend>
-         <div className="card-save__buttons">
-           <a download="business-card.svg" className="button" type="button" id="svg-download" onClick={this.svgDownloadLinkHandler}>svg</a>
-           <a download="business-card.png" className="button" type="button" id="png-download" onClick={this.pngDownloadLinkHandler}>png</a>
-           <input type="button" value="print" className="button" onClick={() => window.print()} />
-         </div>
-       </fieldset>
-     </div>
-   );
- }
-}
+  return (
+    <Container maxWidth="md">
+      <Typography variant="h3" component="h1" gutterBottom align="center" sx={{ mt: 4 }}>
+        American Psycho Business Card Generator
+      </Typography>
+      <Grid container spacing={4}>
+        <Grid item xs={12} md={6}>
+          <Card>
+            <CardContent>
+              <Box
+                component="img"
+                src={`data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`}
+                alt="Business Card"
+                sx={{ width: '100%', height: 'auto' }}
+              />
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <Card>
+            <CardContent>
+              <Typography variant="h6" gutterBottom>Edit Card Details</Typography>
+              {Object.entries(cardFields).map(([key, value]) => (
+                <TextField
+                  key={key}
+                  id={key}
+                  label={key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
+                  value={value}
+                  onChange={updateCard}
+                  fullWidth
+                  margin="normal"
+                  variant="outlined"
+                />
+              ))}
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
+      <Box sx={{ mt: 4, display: 'flex', justifyContent: 'center', gap: 2 }}>
+        <Button variant="contained" onClick={() => handleDownload('svg')}>Download SVG</Button>
+        <Button variant="contained" onClick={() => handleDownload('png')}>Download PNG</Button>
+        <Button variant="contained" onClick={() => window.print()}>Print</Button>
+      </Box>
+    </Container>
+  );
+};
 
 export default App;
